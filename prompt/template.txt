@@ -1,0 +1,1 @@
+How many of the letter "{{ letter }}" are in the word "{{ word }}"?

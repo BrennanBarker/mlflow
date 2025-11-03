@@ -1,0 +1,5 @@
+{
+    "$schema": "https://json-schema.org/draft-07/schema#",
+    "type": "number",
+    "description": "The count of letters in the given word."
+}

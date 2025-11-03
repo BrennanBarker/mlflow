@@ -1,0 +1,4 @@
+name: count-letters
+commit_message: Add a description to the response format
+tags:
+  has_response_format: "true"
