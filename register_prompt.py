@@ -11,10 +11,10 @@ import yaml
 
 logging.basicConfig(level=logging.INFO)
 
-def get_hash(dir_path: Path) -> str:
+def get_prompt_hash(dir_path: Path) -> str:
     hash_md5 = hashlib.md5()
     for file_path in sorted(dir_path.rglob('*')):
-        if file_path.is_file():
+        if file_path.name in ['template.txt', 'template.json', 'response_format.json'] and file_path.is_file():
             with open(file_path, 'rb') as f:
                 for chunk in iter(lambda: f.read(4096), b""):
                     hash_md5.update(chunk)
@@ -36,12 +36,14 @@ def get_response_format(response_format_path: Path) -> dict:
         "schema": response_schema  # CHECK: Do I need to drop the $schema field?
     }
 
-def get_matching_prompt(hash: str):
-    matches = mlflow.genai.search_prompts(f"tags.hash = '{hash}'")
-    return matches[0] if matches else None
+def get_matching_prompt(dir_path, hash: str):
+    try:
+        return mlflow.genai.load_prompt(f'prompts:/{dir_path.name}@{hash}')
+    except Exception as e:
+        return None
 
 def register_prompt(dir_path: Path):
-    metadata_path = dir_path / 'metadata.yml'
+    metadata_path = dir_path / 'metadata.yaml'
     with open(metadata_path) as f:
         metadata = yaml.safe_load(f)
 
@@ -49,7 +51,7 @@ def register_prompt(dir_path: Path):
 
     tags = {
         **metadata.get('tags', {}),
-        'hash': get_hash(dir_path=dir_path)
+        'hash': get_prompt_hash(dir_path=dir_path)
     }
 
     response_format_path = dir_path / 'response_format.json'
@@ -74,7 +76,7 @@ def register_prompt(dir_path: Path):
     return registered_prompt
 
 def match_or_register_prompt(dir_path: Path):
-    hash = get_hash(dir_path)
+    hash = get_prompt_hash(dir_path)
     hash_matches = get_matching_prompt(hash)
     if hash_matches:
         logging.info(f"Prompt already registered: {hash_matches.uri}")

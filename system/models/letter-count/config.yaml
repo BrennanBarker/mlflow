@@ -1,0 +1,10 @@
+model: 'gpt-4o'
+task: 'chat.completions'
+# params:
+#   temperature: 0.7
+#   max_tokens: 1500
+#   top_p: 1
+#   frequency_penalty: 0
+#   presence_penalty: 0
+#   n: 1
+#   stop: null
