@@ -1,0 +1,18 @@
+name: count-letters
+type: chat.completion
+network: j
+model: gpt-4o
+params:
+  temperature: .7
+  max_completion_tokens: 10
+prompt:
+  name: count-letters
+  template: How many of the letter "{{ letter }}" are in the word "{{ word }}"?
+  response_format:
+    type: object
+    properties: 
+      count:
+        type: number
+        description: the count
+      explanation:
+        type: string

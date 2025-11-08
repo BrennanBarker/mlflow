@@ -1,0 +1,171 @@
+{
+    "type": "object",
+    "required": [
+        "name",
+        "type",
+        "network",
+        "model",
+        "prompt"
+    ],
+    "properties": {
+        "network": {
+            "type": "string",
+            "enum": ["j"]
+        },
+        "type": {
+            "type": "string",
+            "enum": ["chat.completion"]
+        },
+        "model": {
+            "type": "string"
+        },
+        "prompt": {
+            "type": "object",
+            "required": [
+                "template"
+            ],
+            "properties": {
+                "response_format": {
+                    "title": "Embedded JSON Schema",
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "enum": [
+                                "object",
+                                "string",
+                                "number",
+                                "integer",
+                                "array",
+                                "boolean",
+                                "null"
+                            ]
+                        },
+                        "properties": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "$ref": "#/definitions/schema"
+                            }
+                        },
+                        "required": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/definitions/schema"
+                                },
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/schema"
+                                    }
+                                }
+                            ]
+                        },
+                        "enum": {
+                            "type": "array"
+                        },
+                        "const": {},
+                        "description": {
+                            "type": "string"
+                        }
+                    },
+                    "additionalProperties": {
+                        "$ref": "#/definitions/schema"
+                    }
+                }
+            }
+        },
+        "params": {
+            "type": "object",
+            "properties": {
+                "temperature": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 2,
+                    "default": 1.0,
+                    "description": "Sampling temperature; higher values make output more random."
+                },
+                "top_p": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "description": "Nucleus sampling parameter. Use temperature or top_p, not both."
+                },
+                "max_completion_tokens": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "Maximum number of tokens to generate in the response."
+                },
+                "presence_penalty": {
+                    "type": "number",
+                    "minimum": -2,
+                    "maximum": 2,
+                    "description": "Penalizes new tokens based on whether they appear in the text so far."
+                },
+                "frequency_penalty": {
+                    "type": "number",
+                    "minimum": -2,
+                    "maximum": 2,
+                    "description": "Penalizes new tokens based on frequency of their appearance."
+                }
+            }
+        }
+    },
+    "definitions": {
+        "schema": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "object",
+                        "string",
+                        "number",
+                        "integer",
+                        "array",
+                        "boolean",
+                        "null"
+                    ]
+                },
+                "properties": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/schema"
+                    }
+                },
+                "required": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "items": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/schema"
+                        },
+                        {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/schema"
+                            }
+                        }
+                    ]
+                },
+                "enum": {
+                    "type": "array"
+                },
+                "const": {},
+                "description": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": true
+        }
+    }
+}
